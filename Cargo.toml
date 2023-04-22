@@ -7,7 +7,9 @@ edition = "2021"
 
 [dependencies]
 axum = "0.6.16"
+dotenv = "0.15.0"
 plotlib = "0.5.1"
 serde = "1.0.160"
 tokio = "1.27.0"
 tower-http = "0.4.0"
+yahoo-finance = "0.3.0"
