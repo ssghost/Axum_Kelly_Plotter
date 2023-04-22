@@ -1,1 +1,3 @@
-" to be done."
+fn main() {
+    println!("Hello, world!");
+}
