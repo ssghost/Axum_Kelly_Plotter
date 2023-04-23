@@ -7,7 +7,7 @@ edition = "2021"
 
 [dependencies]
 axum = "0.6.16"
-dotenv = "0.15.0"
+kelly = "0.1.0"
 plotlib = "0.5.1"
 serde = "1.0.160"
 statrs = "0.16.0"
