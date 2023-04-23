@@ -15,4 +15,4 @@ tokio = { version="1.27.0", features = ["full"]}
 tower-http = "0.4.0"
 web-sys = "0.3.61"
 yahoo-finance = "0.3.0"
-yew = { version="0.20.0", features = ["full"]}
+yew = { version="0.20.0", features = ["csr"]}
