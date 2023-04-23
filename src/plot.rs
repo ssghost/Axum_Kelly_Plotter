@@ -1,11 +1,10 @@
-use plotlib::page::Page;
 use plotlib::repr::Plot;
 use plotlib::view::ContinuousView;
 use std::collections::HashMap;
 use yew::prelude::*;
 use yahoo_finance::Bar;
-use statrs::statistics::{Max, Min, Mean};
-use plotlib::style::{PointMarker, PointStyle};
+use statrs::statistics::{Max, Min, MeanN};
+use plotlib::style::LineStyle;
 use kelly::{ KellyAssumption, KellyFormulaBuilder };
 
 
@@ -14,8 +13,8 @@ struct Qtable {
     reward: Vec<f64>
 }
 
-pub fn get_kelly(data: Vec<Bar>) -> (Optional<Qtable>, Optional<Qtable>) {
-    let mut closedata: Qtable = {timestamp = Vec::new(); reward = Vec::new()};
+pub fn get_kelly(data: Vec<Bar>) -> (Option<Qtable>, Option<Qtable>) {
+    let mut closedata: Qtable = {let timestamp=Vec::new(); let reward = Vec::new();};
     let init_vol: f64 = data[0].close.clone();
     for v in data.iter() {
         closedata.timestamp.push(v.timestamp);
@@ -37,16 +36,16 @@ pub fn get_kelly(data: Vec<Bar>) -> (Optional<Qtable>, Optional<Qtable>) {
     for n in 0..num_range {
         let mut r_vec: Vec<f64> = Vec::new();
         for (k, v) in v0_v1.iter()
-            .filter(|k| *k >= mmin + n*interval & *k < mmin + (n+1)*interval) {
+            .filter(|k| *k >= mmin + n*interval && *k < mmin + (n+1)*interval) {
                 r_vec.push(v)
             }
         if n == num_range-1 {
             r_vec.push(v0_v1.get(mmax))
         }
-        &mut assums[i].replace(r_vec.mean());
+        &mut assums[n].replace(r_vec.mean());
         r_vec.clear()
     }
-    let mut kellydata: Qtable = {timestamp = closedata.timestamp.clone(); reward = vec![0; closedata.reward.len()]};
+    let mut kellydata: Qtable = {let timestamp = closedata.timestamp.clone(); let reward = vec![0; closedata.reward.len()];};
     &mut kellydata.reward[0].replace(init_vol);
     for k in 1..closedata.reward.len() {
         let rank: i64 = (kellydata.reward[k-1] - mmin)/interval;
@@ -54,14 +53,15 @@ pub fn get_kelly(data: Vec<Bar>) -> (Optional<Qtable>, Optional<Qtable>) {
         let kelly = KellyFormulaBuilder::new().set_assumptions(assumptions).calculate();
         &mut kellydata.reward[k].replace(kelly*closedata.reward[k] + (1-kelly)*kellydata.reward[k-1]);
     }
-    Ok(closedata, kellydata)
+    Ok(closedata);
+    Ok(kellydata)
 }
 
 #[tokio::main]
 #[function_component]
 pub fn Plot() -> Html{
-    let data = use_state<Result>();
-    let view = use_state<ContinuousView>();
+    let data = use_state::<Result>();
+    let view = use_state::<ContinuousView>();
 
     let onclick = {
         let data = data.clone();

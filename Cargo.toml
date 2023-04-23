@@ -11,8 +11,8 @@ kelly = "0.1.0"
 plotlib = "0.5.1"
 serde = "1.0.160"
 statrs = "0.16.0"
-tokio = "1.27.0"
+tokio = { version="1.27.0", features = ["full"]}
 tower-http = "0.4.0"
 web-sys = "0.3.61"
 yahoo-finance = "0.3.0"
-yew = "0.20.0"
+yew = { version="0.20.0", features = ["full"]}
