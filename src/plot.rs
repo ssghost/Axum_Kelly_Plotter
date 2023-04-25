@@ -51,7 +51,7 @@ pub fn get_kelly(data: Vec<Bar>) -> (Option<Qtable>, Option<Qtable>) {
         let rank: i64 = (kellydata.reward[k-1] - mmin)/interval;
         let assumptions = vec![KellyAssumption(1, assums[rank])];
         let kelly = KellyFormulaBuilder::new().set_assumptions(assumptions).calculate();
-        &mut kellydata.reward[k].replace(kelly*closedata.reward[k] + (1-kelly)*kellydata.reward[k-1]);
+        &mut kellydata.reward[k].replace(kelly*(closedata.reward[k]/closedata.reward[k-1])*kellydata[k-1] + (1-kelly)*kellydata.reward[k-1]);
     }
     Ok(closedata);
     Ok(kellydata)
