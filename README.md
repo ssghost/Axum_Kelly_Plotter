@@ -2,4 +2,4 @@
 My experimental project for plotting kelly income upon various stock symbols using Rust Yew.
 
 ## Usage
-`$> cargo build . && cargo run Axum_Kelly_Plotter`
+`$> cargo build . && cargo run Yew_Kelly_Plotter`
