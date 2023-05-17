@@ -1,18 +1,35 @@
-use axum::{ routing::{get, post}, Router, serve };
+use yew::prelude::*;
+use yew_router::prelude::*;
 mod fetch;
 mod plot;
 
-#[tokio::main]
-async fn main() {
-    let app = Router::new()
-        .route("/", get(root))
-        .route("/fetch", post(fetch::Fetch))
-        .route("/plot", post(plot::Plot));
-
-    let listener = tokio::net::TcpListener::bind("0.0.0.0:3000").await.unwrap();
-    serve(listener, app).await.unwrap();
+#[derive(Clone, Routable, PartialEq)]
+enum Route {
+    #[at("/")]
+    Home,
+    #[at("/fetch")]
+    Fetch,
+    #[at("/kplot")]
+    Kplot
 }
 
-async fn root() -> &'static str {
-    "This is a kelly criterion plotter for stock symbols."
+fn switch(routes: Route) -> Html {
+    match routes {
+        Route::Home => html! { <h1>{ "This is a kelly criterion plotter for stock symbols." }</h1> },
+        Route::Fetch => html! { <fetch::Fetch /> },
+        Route::Kplot => html! { <plot::Kplot />}
+    }
+}
+
+#[function_component(App)]
+fn app() -> Html {
+    html! {
+        <BrowserRouter>
+            <Switch<Route> render={switch} />
+        </BrowserRouter>
+    }
+}
+
+fn main() {
+    yew::Renderer::<App>::new().render();
 }
